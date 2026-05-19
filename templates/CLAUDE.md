@@ -7,25 +7,74 @@ Claude는 모든 작업 시 이 파일의 내용을 최우선으로 준수해야
 
 ---
 
+## 0. 문서 디렉터리 구조 (필수 숙지)
+
+업무 관련 문서는 모두 `docs/work/` 아래의 3개 폴더로 관리합니다.
+
+```
+docs/work/
+├── 📓 daily_record/         ← 활동 일지: 그날 무엇을 "했는가"
+│   └── YYYY_MM_DD.md
+├── 📅 daily_todo_record/    ← 날짜별 TODO 스냅샷: 그날 무엇을 "할 것인가" + 진행률
+│   └── YYYY_MM_DD.md
+└── 🎯 todo/                 ← 주제별 장기 TODO (날짜 무관, 주제 종료 시까지 유지)
+    └── {topic}.md
+```
+
+### 폴더별 역할 분담
+
+| 폴더 | 시점 | 단위 | 수명 |
+|---|---|---|---|
+| `daily_record` | 작업 후 | 날짜 | 영구 (활동 기록) |
+| `daily_todo_record` | 작업 전·중 | 날짜 | 영구 (체크박스 완료 상태 그대로 보존) |
+| `todo` | 수시 | 주제 | 주제 종료 시까지 |
+
+### `todo/{topic}.md` 본문 포맷
+
+한 파일에 한 주제. 주제 안에서 여러 하위 항목을 `##` 으로 나누고, 각 항목은 `### 📐 계획` / `### 💻 코드` / `### 🧪 테스트` 3섹션으로 구성합니다. 이모지로 꾸미면 가독성↑.
+
+```markdown
+# 🎯 {주제명}
+
+## {하위 항목 1}
+
+### 📐 계획
+- [ ] ...
+
+### 💻 코드
+- [ ] ...
+
+### 🧪 테스트
+- [ ] ...
+```
+
+### `daily_todo_record/YYYY_MM_DD.md` 본문 포맷
+
+`todo/{topic}.md` 와 동일한 3섹션 구조(계획/코드/테스트). 단, **그날 처리할 단발성 작업** 단위로 묶음. 완료 항목은 `- [x] ... (YYYY-MM-DD HH:MM)` 형식으로 시각 기록.
+
+---
+
 ## 1. 시작 루틴 (필수)
 
 새로운 세션을 시작할 때, 다음 파일들을 순서대로 확인하고 **사용자에게 한 줄로 브리핑**하십시오.
 
-1. **오늘의 TODO (`docs/todo/YYYY_MM_DD.md`)**
+1. **오늘의 TODO 스냅샷 (`docs/work/daily_todo_record/YYYY_MM_DD.md`)**
    - 오늘 날짜 파일이 있으면 진행 중/대기 항목을 파악
-   - 없으면 `docs/todo/` 내 가장 최근 파일을 참고해 미완료 인계 여부 결정
-2. **오늘의 작업 로그 (`docs/work-logs/YYYY_MM_DD.md`)**
+   - 없으면 `docs/work/daily_todo_record/` 내 가장 최근 파일을 참고해 미완료 인계 여부 결정
+2. **주제별 장기 TODO (`docs/work/todo/*.md`)**
+   - 진행 중인 주제 파일을 훑고, 오늘 작업과 연관된 항목이 있는지 확인
+3. **오늘의 활동 일지 (`docs/work/daily_record/YYYY_MM_DD.md`)**
    - 있으면 현재 진행 상황 파악, 없으면 새로 생성할 준비
-3. **`memory/MEMORY.md`** (있는 경우)
+4. **`memory/MEMORY.md`** (있는 경우)
    - 이전 세션의 피드백, 사용자 선호, 프로젝트 컨텍스트 숙지
-4. **`CLAUDE.md`** (이 파일)
+5. **`CLAUDE.md`** (이 파일)
    - 본 규칙 + 프로젝트별 오버라이드 재확인
 
-> **TODO/Work-Log 파일이 없는 프로젝트라면** 위 1~2번은 건너뛰고 사용자에게 "TODO/work-log 구조를 사용하시는지" 한 번 확인 후 진행하십시오.
+> **`docs/work/` 구조가 없는 프로젝트라면** 위 1~3번은 건너뛰고 사용자에게 "해당 구조를 사용하시는지" 한 번 확인 후 진행하십시오.
 
 ### 파일 컨벤션
-- 신규 TODO 항목은 항상 `docs/todo/YYYY_MM_DD.md` (오늘 날짜 파일)에 기록
-- 일자별 파일이 누적되면 같은 피처의 작업은 `> 관련: docs/todo/YYYY_MM_DD.md` 형식으로 cross-reference
+- 단발성 신규 TODO 항목은 항상 `docs/work/daily_todo_record/YYYY_MM_DD.md` (오늘 날짜 파일)에 기록
+- 여러 날에 걸치는 주제성 작업은 `docs/work/todo/{topic}.md` 에 누적하고, 그날 다룬 항목은 `daily_todo_record` 에서 `> 관련: docs/work/todo/{topic}.md` 로 cross-reference
 - 루트의 `TODO.md` 가 있는 경우 → **legacy 백로그(아카이브)** 로 간주, 신규 항목 추가 금지
 
 ---
@@ -34,7 +83,7 @@ Claude는 모든 작업 시 이 파일의 내용을 최우선으로 준수해야
 
 모든 주요 작업이 완료되면 다음 절차를 순서대로 수행하십시오.
 
-1. **로그 업데이트** — `docs/work-logs/YYYY_MM_DD.md` 에 다음을 누적 기록:
+1. **로그 업데이트** — `docs/work/daily_record/YYYY_MM_DD.md` 에 다음을 누적 기록:
    - 사용자가 지시한 작업 내용
    - TODO 진행 상황(Done)
    - 변경된 파일 목록
