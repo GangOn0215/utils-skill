@@ -38,6 +38,19 @@ Copy-Item -Recurse skills\* $env:USERPROFILE\.claude\skills\
 | [**git-remote-auto**](skills/git-remote-auto/README.md) | URL 한 줄 → 로컬을 원격에 자동 연결·푸시 | `깃허브에 올려줘`, `자동으로 올려줘` |
 | [**git-remote-guided**](skills/git-remote-guided/README.md) | 단계마다 확인받으며 안전하게 GitHub 연결 | `안전하게 push`, `단계별로 깃허브` |
 
+## 📄 Templates
+
+새 프로젝트에 바로 복사해서 쓸 수 있는 템플릿:
+
+| Template | 용도 |
+|----------|------|
+| [**templates/CLAUDE.md**](templates/CLAUDE.md) | 프로젝트 공통 Claude Code 지침 — §9만 채우면 어느 프로젝트에서도 사용 가능 |
+
+```bash
+# 새 프로젝트 루트에 복사
+cp <path>/utils-skill/templates/CLAUDE.md ./CLAUDE.md
+```
+
 ---
 
 ## 🤔 Which one should I use?
@@ -58,6 +71,8 @@ Copy-Item -Recurse skills\* $env:USERPROFILE\.claude\skills\
 ```
 utils-skill/
 ├── README.md                        ← 이 파일 (인덱스)
+├── templates/
+│   └── CLAUDE.md                    ← 프로젝트 공통 Claude 지침 템플릿
 └── skills/
     ├── git-commit-helper/
     │   ├── README.md                ← 사람용 상세 문서
