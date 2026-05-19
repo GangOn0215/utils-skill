@@ -1,5 +1,5 @@
 ---
-name: code-review
+name: php-code-review
 # prettier-ignore
 description: 코드 리뷰를 체계적으로 수행합니다. 사용자가 "리뷰해줘", "코드 리뷰", "PR 리뷰", "check this code", "이 코드 좀 봐줘"라고 하면 이 스킬을 사용합니다.
 ---
